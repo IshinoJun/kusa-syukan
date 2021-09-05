@@ -1,0 +1,8 @@
+*.jpg
+*.png
+*.gif
+*.ttf
+.eslintrc.js
+babel.config.js
+app.json
+babel.config.js
