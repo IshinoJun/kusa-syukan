@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/core';
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import AddButton from '../components/common/button/AddButton';
 import Layout from '../components/common/layout/Layout';
 import HomeScreenProp from '../models/HomeScreenProp';
@@ -10,28 +10,17 @@ import { useWindowDimensions } from 'react-native';
 import { format } from 'date-fns';
 import DateValue from '../models/DateValue';
 import TodoTopTable from '../components/screen/TodoTopScreen/TodoTopTable';
-
-interface todoValue {
-  name: string;
-  values: { day: string; check: boolean }[];
-  color: string;
-}
+import { useStorage } from '../hooks/useStorage';
+import TodoValue from '../models/TodoValue';
+import { Icon } from 'react-native-elements';
 
 const DAY_OF_WEEK_STR = ['日', '月', '火', '水', '木', '金', '土'] as const;
-const hoge: todoValue[] = [
-  {
-    name: 'サンプリを飲む',
-    values: [
-      { day: '2021-09-17', check: true },
-      { day: '2021-09-18', check: true },
-    ],
-    color: 'red',
-  },
-];
 
 const TodoHomeScreen = (): JSX.Element => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [dayValues, setDayValues] = useState<DateValue[] | null>(null);
+  const [todoValues, setTodoValues] = useState<TodoValue[] | null>(null);
+  const storage = useStorage();
   const dimensions = useWindowDimensions();
   const navigation = useNavigation<HomeScreenProp>();
 
@@ -46,10 +35,48 @@ const TodoHomeScreen = (): JSX.Element => {
     <AddButton key={1} onPress={handlePressAddButton} />,
   ];
 
+  const getCurrentDayDone = () => {
+    const done =
+      todoValues?.filter((t) =>
+        t.values.some((v) => v.day === format(currentDate, 'yyyy-MM-dd')),
+      ) ?? [];
+
+    return (
+      <View style={{ position: 'relative', flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ paddingRight: 5, fontFamily: 'BalooChettan2_700Bold' }}>
+            {done.length}
+          </Text>
+          <Text style={{ fontFamily: 'BalooChettan2_700Bold' }}>/</Text>
+          <Text style={{ paddingLeft: 5, fontFamily: 'BalooChettan2_700Bold' }}>
+            {todoValues?.length ?? 0}
+          </Text>
+        </View>
+        <Text style={{ fontFamily: 'BalooChettan2_700Bold', position: 'absolute', left: 40 }}>
+          done!
+        </Text>
+      </View>
+    );
+  };
+
+  const handleClickToday = useCallback(() => {
+    setCurrentDate(new Date());
+  }, []);
+
   const footerContents = [
-    <Text key={0}>今日</Text>,
-    <Text key={1}>今日</Text>,
-    <Text key={2}>今日</Text>,
+    <View key={0} style={{ width: '20%', alignItems: 'flex-start' }}>
+      <TouchableOpacity onPress={handleClickToday}>
+        <View style={styles.footerIconWrap}>
+          <Text>今日</Text>
+        </View>
+      </TouchableOpacity>
+    </View>,
+    <View style={{ width: '60%', alignItems: 'center' }} key={1}>
+      {getCurrentDayDone()}
+    </View>,
+    <View key={2} style={{ width: '20%', alignItems: 'flex-end' }}>
+      <Icon type="simple-line-icons" name="settings" size={20} />
+    </View>,
   ];
 
   /**
@@ -101,9 +128,28 @@ const TodoHomeScreen = (): JSX.Element => {
     setDayValues(generateDays());
   }, [generateDays]);
 
+  useEffect(() => {
+    storage
+      ?.load({
+        key: 'TODO',
+      })
+      .then((data) => {
+        setTodoValues(data);
+      });
+  }, [storage]);
+
+  useEffect(() => {
+    if (todoValues) {
+      storage?.save({
+        key: 'TODO',
+        data: todoValues,
+      });
+    }
+  }, [storage, todoValues]);
+
   return (
     <>
-      {dayValues ? (
+      {dayValues && todoValues ? (
         <Layout headerContents={headerContents} footerContents={footerContents}>
           <View style={styles.container}>
             <TodoTopDateBar
@@ -112,7 +158,12 @@ const TodoHomeScreen = (): JSX.Element => {
               currentDate={currentDate}
             />
             <View style={styles.tableContainer}>
-              <TodoTopTable todoValues={hoge} dayValues={dayValues} dimensions={dimensions} />
+              <TodoTopTable
+                todoValues={todoValues}
+                dayValues={dayValues}
+                dimensions={dimensions}
+                onChangeTodoValues={setTodoValues}
+              />
             </View>
           </View>
         </Layout>
@@ -138,6 +189,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#F0F0F0',
+  },
+  footerIconWrap: {
+    width: 44,
+    height: 44,
+    flex: 1,
+    justifyContent: 'center',
   },
 });
 

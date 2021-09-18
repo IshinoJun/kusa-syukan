@@ -9,14 +9,25 @@ interface Props {
   dayValues: DateValue[];
   todoValues: TodoValue[];
   dimensions: ScaledSize;
+  onChangeTodoValues: (nextTodoValues: TodoValue[]) => void;
 }
 
-const TodoTopTable = ({ dayValues, todoValues, dimensions }: Props): JSX.Element => {
+const TodoTopTable = ({
+  dayValues,
+  todoValues,
+  dimensions,
+  onChangeTodoValues,
+}: Props): JSX.Element => {
   return (
     <>
       <TodoTopTableHeader dayValues={dayValues} />
       <ScrollView>
-        <TodoTopTableBody todoValues={todoValues} dayValues={dayValues} dimensions={dimensions} />
+        <TodoTopTableBody
+          todoValues={todoValues}
+          dayValues={dayValues}
+          dimensions={dimensions}
+          onChangeTodoValues={onChangeTodoValues}
+        />
       </ScrollView>
     </>
   );

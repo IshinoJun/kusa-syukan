@@ -6,26 +6,48 @@ import CheckBox from 'react-native-elements/dist/checkbox/CheckBox';
 import { Rows, Table } from 'react-native-table-component';
 import DateValue from '../../../models/DateValue';
 import TodoValue from '../../../models/TodoValue';
+import { cloneDeep } from 'lodash';
 
 interface Props {
   dayValues: DateValue[];
   todoValues: TodoValue[];
   dimensions: ScaledSize;
+  onChangeTodoValues: (nextTodoValues: TodoValue[]) => void;
 }
 
-const TodoTopTableBody = ({ dayValues, todoValues, dimensions }: Props): JSX.Element => {
+const TodoTopTableBody = ({
+  dayValues,
+  todoValues,
+  dimensions,
+  onChangeTodoValues,
+}: Props): JSX.Element => {
   const getTaskTextMaxWidth = useCallback(() => {
     return dimensions.width / 3;
   }, [dimensions.width]);
 
+  const handleClickCheck = useCallback(
+    (day: string, todoValueIndex: number) => {
+      const nextTodoValues = cloneDeep(todoValues);
+      const nextTodoValue = nextTodoValues[todoValueIndex];
+      const value = nextTodoValue.values.find((v) => v.day === day);
+      if (value) {
+        value.check = !value.check;
+      } else {
+        nextTodoValue.values.push({ day, check: true });
+      }
+      onChangeTodoValues(nextTodoValues);
+    },
+    [onChangeTodoValues, todoValues],
+  );
+
   const generateRowsData = useCallback(() => {
-    return todoValues.map((todoValue) => {
-      return dayValues.map((dayValue, i) => {
+    return todoValues.map((todoValue, todoValueIndex) => {
+      return dayValues.map((dayValue, dayValueIndex) => {
         const value = todoValue.values.find((v) => v.day === dayValue.day);
-        if (dayValues.length === i + 1) {
+        if (dayValues.length === dayValueIndex + 1) {
           return (
             <View
-              key={i}
+              key={dayValueIndex}
               style={{ flexDirection: 'row', justifyContent: 'space-between', maxWidth: '100%' }}>
               <View style={{ flexDirection: 'row', position: 'relative' }}>
                 <CheckBox
@@ -33,6 +55,7 @@ const TodoTopTableBody = ({ dayValues, todoValues, dimensions }: Props): JSX.Ele
                   checkedIcon="check-circle"
                   uncheckedIcon="circle"
                   size={40}
+                  onPress={() => handleClickCheck(dayValue.day, todoValueIndex)}
                   checkedColor="#219653"
                   checked={value?.check}
                   containerStyle={{ paddingLeft: 0, paddingRight: 0 }}
@@ -56,14 +79,14 @@ const TodoTopTableBody = ({ dayValues, todoValues, dimensions }: Props): JSX.Ele
           );
         } else {
           return (
-            <View style={styles.row} key={i}>
+            <View style={styles.row} key={dayValueIndex}>
               {value?.check ? <FontAwesome name="check" size={17} color="#219653" /> : null}
             </View>
           );
         }
       });
     });
-  }, [dayValues, getTaskTextMaxWidth, todoValues]);
+  }, [dayValues, getTaskTextMaxWidth, handleClickCheck, todoValues]);
 
   return (
     <Table borderStyle={{ borderWidth: 1, borderColor: '#DDDDDD' }}>
