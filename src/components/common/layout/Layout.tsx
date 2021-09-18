@@ -13,7 +13,7 @@ const Layout = ({ headerContents, children, footerContents }: Props): JSX.Elemen
   return (
     <View style={styles.container}>
       <Header contents={headerContents} />
-      <ScrollView>{children}</ScrollView>
+      <View>{children}</View>
       <Footer contents={footerContents} />
     </View>
   );
@@ -22,6 +22,7 @@ const Layout = ({ headerContents, children, footerContents }: Props): JSX.Elemen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: 'relative',
   },
 });
 

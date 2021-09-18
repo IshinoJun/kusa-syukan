@@ -7,21 +7,26 @@ interface Props {
 
 const Footer = ({ contents }: Props): JSX.Element => {
   return (
-    <SafeAreaView>
-      <View style={styles.container}>{contents.map((content) => content)}</View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>{contents.map((content) => content)}</View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    backgroundColor: '#F0F0F0',
+  },
+  content: {
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
     paddingHorizontal: 14,
     paddingVertical: 12,
     backgroundColor: '#F0F0F0',
-    width: '100%',
   },
 });
 
