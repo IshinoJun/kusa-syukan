@@ -27,17 +27,28 @@ const TodoForm = ({
     [todoValue, onChangeTodoValue],
   );
 
+  const generateErrorMassage = useCallback(() => {
+    if (todoValue.name === '') {
+      return 'タスク名を入力しましょう！';
+    } else {
+      return undefined;
+    }
+  }, [todoValue.name]);
+
   return (
     <View>
       <View style={styles.topContainer}>
-        <Input
-          placeholder="タスク名"
-          style={styles.input}
-          inputContainerStyle={styles.inputContainer}
-          onChangeText={handleChangeTodoName}
-          value={todoValue.name}
-          autoFocus={!editable}
-        />
+        <View style={{ height: 105 }}>
+          <Input
+            placeholder="タスク名"
+            style={styles.input}
+            inputContainerStyle={styles.inputContainer}
+            onChangeText={handleChangeTodoName}
+            value={todoValue.name}
+            autoFocus={!editable}
+            errorMessage={generateErrorMassage()}
+          />
+        </View>
         <View style={styles.colorPaletteContainer}>
           <TodoColorPalette todoValue={todoValue} onChangeTodoValue={onChangeTodoValue} />
         </View>

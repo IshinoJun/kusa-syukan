@@ -52,9 +52,9 @@ const TodoAddScreen = (): JSX.Element => {
       </Text>
     </View>,
     <View key={2} style={{ width: '20%', alignItems: 'flex-end' }}>
-      <TouchableOpacity onPress={handlePressTodoSave}>
+      <TouchableOpacity onPress={handlePressTodoSave} disabled={todoValue.name === ''}>
         <View style={styles.footerButtonWrap}>
-          <Text>保存</Text>
+          <Text style={{ color: todoValue.name === '' ? 'grey' : undefined }}>保存</Text>
         </View>
       </TouchableOpacity>
     </View>,
