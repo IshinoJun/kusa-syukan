@@ -1,6 +1,6 @@
 import { RouteProp, useIsFocused, useNavigation, useRoute } from '@react-navigation/core';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import Layout from '../components/common/layout/Layout';
 import HomeScreenProp from '../models/HomeScreenProp';
 import TodoValue from '../models/TodoValue';
@@ -22,7 +22,7 @@ const TodoEditScreen = (): JSX.Element => {
     navigation.navigate('TodoTop');
   }, [navigation]);
 
-  const handlePressTodoSave = () => {
+  const handlePressTodoSave = useCallback(() => {
     void (async (): Promise<void> => {
       if (!todoValues.current) return;
       try {
@@ -32,9 +32,9 @@ const TodoEditScreen = (): JSX.Element => {
         return;
       }
     })();
-  };
+  }, [navigation, storage]);
 
-  const handlePressTodoDelete = () => {
+  const handleTodoDelete = useCallback(() => {
     void (async (): Promise<void> => {
       if (!todoValues.current) return;
       try {
@@ -45,7 +45,19 @@ const TodoEditScreen = (): JSX.Element => {
         return;
       }
     })();
-  };
+  }, [navigation, storage, todoValue?.uuid]);
+
+  const handlePressTodoDelete = useCallback(() => {
+    Alert.alert(
+      '削除',
+      '該当タスクのデータが全て失われます。本当によろしいですか？',
+      [
+        { text: 'いいえ', onPress: undefined },
+        { text: 'はい', onPress: () => handleTodoDelete() },
+      ],
+      { cancelable: false },
+    );
+  }, [handleTodoDelete]);
 
   const headerContents = [
     <View key={0} style={{ width: '20%', alignItems: 'flex-start' }}>

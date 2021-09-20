@@ -26,7 +26,7 @@ const TodoAddScreen = (): JSX.Element => {
     navigation.navigate('TodoTop');
   }, [navigation]);
 
-  const handlePressTodoSave = () => {
+  const handlePressTodoSave = useCallback(() => {
     void (async (): Promise<void> => {
       if (!todoValues.current) return;
       try {
@@ -36,7 +36,7 @@ const TodoAddScreen = (): JSX.Element => {
         return;
       }
     })();
-  };
+  }, [navigation, storage]);
 
   const headerContents = [
     <View key={0} style={{ width: '20%', alignItems: 'flex-start' }}>
