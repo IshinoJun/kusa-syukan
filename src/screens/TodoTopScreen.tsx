@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/core';
+import { useIsFocused, useNavigation } from '@react-navigation/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import AddButton from '../components/common/button/AddButton';
@@ -23,6 +23,7 @@ const TodoHomeScreen = (): JSX.Element => {
   const storage = useStorage();
   const dimensions = useWindowDimensions();
   const navigation = useNavigation<HomeScreenProp>();
+  const isFocused = useIsFocused();
 
   const handlePressAddButton = useCallback(() => {
     navigation.navigate('TodoAdd');
@@ -38,7 +39,7 @@ const TodoHomeScreen = (): JSX.Element => {
   const getCurrentDayDone = () => {
     const done =
       todoValues?.filter((t) =>
-        t.values.some((v) => v.day === format(currentDate, 'yyyy-MM-dd')),
+        t.values.some((v) => v.day === format(currentDate, 'yyyy-MM-dd') && v.check),
       ) ?? [];
 
     return (
@@ -52,7 +53,13 @@ const TodoHomeScreen = (): JSX.Element => {
             {todoValues?.length ?? 0}
           </Text>
         </View>
-        <Text style={{ fontFamily: 'BalooChettan2_700Bold', position: 'absolute', left: 40 }}>
+        <Text
+          style={{
+            fontFamily: 'BalooChettan2_700Bold',
+            position: 'absolute',
+            left:
+              17 * (done.length.toString().length + (todoValues?.length ?? 0).toString().length),
+          }}>
           done!
         </Text>
       </View>
@@ -66,7 +73,7 @@ const TodoHomeScreen = (): JSX.Element => {
   const footerContents = [
     <View key={0} style={{ width: '20%', alignItems: 'flex-start' }}>
       <TouchableOpacity onPress={handleClickToday}>
-        <View style={styles.footerIconWrap}>
+        <View style={styles.footerButtonWrap}>
           <Text>今日</Text>
         </View>
       </TouchableOpacity>
@@ -129,14 +136,19 @@ const TodoHomeScreen = (): JSX.Element => {
   }, [generateDays]);
 
   useEffect(() => {
-    storage
-      ?.load({
-        key: 'TODO',
-      })
-      .then((data) => {
-        setTodoValues(data);
-      });
-  }, [storage]);
+    if (isFocused) {
+      void (async (): Promise<void> => {
+        try {
+          const nextTodoValues = (await storage?.load({
+            key: 'TODO',
+          })) as TodoValue[] | null;
+          setTodoValues(nextTodoValues ?? []);
+        } catch (e) {
+          return;
+        }
+      })();
+    }
+  }, [storage, isFocused]);
 
   useEffect(() => {
     if (todoValues) {
@@ -179,6 +191,7 @@ const styles = StyleSheet.create({
   },
   container: {
     marginTop: 4,
+    height: '90%',
   },
   weekBar: {
     flexDirection: 'row',
@@ -190,7 +203,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#F0F0F0',
   },
-  footerIconWrap: {
+  footerButtonWrap: {
     width: 44,
     height: 44,
     flex: 1,

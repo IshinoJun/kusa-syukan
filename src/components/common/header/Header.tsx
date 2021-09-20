@@ -1,13 +1,21 @@
-import { SafeAreaView, StyleSheet, View } from 'react-native';
-import React from 'react';
+import { LayoutChangeEvent, SafeAreaView, StyleSheet, View } from 'react-native';
+import React, { useCallback } from 'react';
 
 interface Props {
   contents: JSX.Element[];
+  onChangeHeaderHight: (hight: number) => void;
 }
 
-const Header = ({ contents }: Props): JSX.Element => {
+const Header = ({ contents, onChangeHeaderHight }: Props): JSX.Element => {
+  const getHeight = useCallback(
+    (event: LayoutChangeEvent) => {
+      onChangeHeaderHight(event.nativeEvent.layout.height);
+    },
+    [onChangeHeaderHight],
+  );
+
   return (
-    <SafeAreaView>
+    <SafeAreaView onLayout={getHeight}>
       <View style={styles.container}>{contents.map((content) => content)}</View>
     </SafeAreaView>
   );

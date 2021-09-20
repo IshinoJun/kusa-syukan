@@ -1,14 +1,22 @@
-import { SafeAreaView, StyleSheet, View } from 'react-native';
-import React from 'react';
+import { LayoutChangeEvent, SafeAreaView, StyleSheet, View } from 'react-native';
+import React, { useCallback } from 'react';
 
 interface Props {
-  contents: JSX.Element[];
+  contents?: JSX.Element[];
+  onChangeFooterHight: (hight: number) => void;
 }
 
-const Footer = ({ contents }: Props): JSX.Element => {
+const Footer = ({ contents, onChangeFooterHight }: Props): JSX.Element => {
+  const getHeight = useCallback(
+    (event: LayoutChangeEvent) => {
+      onChangeFooterHight(event.nativeEvent.layout.height);
+    },
+    [onChangeFooterHight],
+  );
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>{contents.map((content) => content)}</View>
+    <SafeAreaView style={styles.container} onLayout={getHeight}>
+      <View style={styles.content}>{contents?.map((content) => content)}</View>
     </SafeAreaView>
   );
 };
