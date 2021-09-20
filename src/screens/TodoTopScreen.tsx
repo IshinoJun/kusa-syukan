@@ -145,6 +145,8 @@ const TodoHomeScreen = (): JSX.Element => {
           })) as TodoValue[] | null;
           setTodoValues(nextTodoValues ?? []);
         } catch (e) {
+          /** TODO:ちゃんとエラーハンドリング 初回はないので */
+          setTodoValues([]);
           return;
         }
       })();
