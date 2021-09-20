@@ -17,7 +17,11 @@ const Layout = ({ headerContents, children, footerContents }: Props): JSX.Elemen
   return (
     <View style={styles.container}>
       <Header contents={headerContents} onChangeHeaderHight={setHeaderHight} />
-      <View style={{ height: dimensions.height - (footerHight ?? 0) - (headerHight ?? 0) }}>
+      <View
+        style={{
+          height: dimensions.height - (footerHight ?? 0) - (headerHight ?? 0),
+          backgroundColor: '#FFF',
+        }}>
         {children}
       </View>
       <Footer contents={footerContents} onChangeFooterHight={setFooterHight} />

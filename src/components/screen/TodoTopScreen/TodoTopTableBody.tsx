@@ -126,7 +126,6 @@ const styles = StyleSheet.create({
     height: 70,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#F0F0F0',
   },
   todoName: {
     fontSize: 14,
