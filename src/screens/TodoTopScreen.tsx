@@ -82,7 +82,8 @@ const TodoHomeScreen = (): JSX.Element => {
       {getCurrentDayDone()}
     </View>,
     <View key={2} style={{ width: '20%', alignItems: 'flex-end' }}>
-      <Icon type="simple-line-icons" name="settings" size={20} />
+      {/** 機能としてないので非表示 */}
+      <Icon type="simple-line-icons" name="settings" size={20} color={'transparent'} />
     </View>,
   ];
 
@@ -161,8 +162,8 @@ const TodoHomeScreen = (): JSX.Element => {
 
   return (
     <>
-      {dayValues && todoValues ? (
-        <Layout headerContents={headerContents} footerContents={footerContents}>
+      <Layout headerContents={headerContents} footerContents={footerContents}>
+        {dayValues && todoValues ? (
           <View style={styles.container}>
             <TodoTopDateBar
               onClickNextDate={handleClickNextDate}
@@ -178,8 +179,8 @@ const TodoHomeScreen = (): JSX.Element => {
               />
             </View>
           </View>
-        </Layout>
-      ) : null}
+        ) : null}
+      </Layout>
     </>
   );
 };

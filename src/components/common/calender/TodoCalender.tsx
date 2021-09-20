@@ -152,7 +152,7 @@ const dayTextStyle = (date: DateObject, currentDate: Date) =>
         date.month !== currentDate.getMonth() + 1
           ? '#D1D3D4'
           : date.dateString === format(currentDate, 'yyyy-MM-dd')
-          ? 'green'
+          ? '#EB5757'
           : 'black',
     },
   });

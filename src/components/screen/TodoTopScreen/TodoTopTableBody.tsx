@@ -1,18 +1,21 @@
 import FontAwesome from '@expo/vector-icons/build/FontAwesome';
 import React, { useCallback } from 'react';
-import { View, Text, ScaledSize, StyleSheet } from 'react-native';
+import { View, Text, ScaledSize, StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import CheckBox from 'react-native-elements/dist/checkbox/CheckBox';
 import { Rows, Table } from 'react-native-table-component';
 import DateValue from '../../../models/DateValue';
 import TodoValue from '../../../models/TodoValue';
 import { cloneDeep } from 'lodash';
+import { useNavigation } from '@react-navigation/core';
+import HomeScreenProp from '../../../models/HomeScreenProp';
 
 interface Props {
   dayValues: DateValue[];
   todoValues: TodoValue[];
   dimensions: ScaledSize;
   onChangeTodoValues: (nextTodoValues: TodoValue[]) => void;
+  editTodoValue?: TodoValue;
 }
 
 const TodoTopTableBody = ({
@@ -21,6 +24,15 @@ const TodoTopTableBody = ({
   dimensions,
   onChangeTodoValues,
 }: Props): JSX.Element => {
+  const navigation = useNavigation<HomeScreenProp>();
+
+  const handleClickEdit = useCallback(
+    (uuid: string) => {
+      navigation.navigate('TodoEdit', { uuid });
+    },
+    [navigation],
+  );
+
   const getTaskTextMaxWidth = useCallback(() => {
     return dimensions.width / 3;
   }, [dimensions.width]);
@@ -71,10 +83,24 @@ const TodoTopTableBody = ({
                   </Text>
                 </View>
               </View>
-              <View style={styles.editIconWrapper}>
-                <Icon type="ant-design" name="rightcircleo" size={14} iconStyle={styles.editIcon} />
-              </View>
-              <View style={{ backgroundColor: todoValue.color, width: 17 }} />
+              <TouchableOpacity
+                onPress={() => handleClickEdit(todoValue.uuid)}
+                style={{ width: 44, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                <View style={styles.editIconWrapper}>
+                  <Icon
+                    type="ant-design"
+                    name="rightcircleo"
+                    size={14}
+                    iconStyle={styles.editIcon}
+                  />
+                </View>
+                <View
+                  style={{
+                    backgroundColor: todoValue.color,
+                    width: 17,
+                  }}
+                />
+              </TouchableOpacity>
             </View>
           );
         } else {
@@ -86,7 +112,7 @@ const TodoTopTableBody = ({
         }
       });
     });
-  }, [dayValues, getTaskTextMaxWidth, handleClickCheck, todoValues]);
+  }, [dayValues, getTaskTextMaxWidth, handleClickCheck, handleClickEdit, todoValues]);
 
   return (
     <Table borderStyle={{ borderWidth: 1, borderColor: '#DDDDDD' }}>

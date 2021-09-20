@@ -34,6 +34,7 @@ const TodoForm = ({
           inputContainerStyle={styles.inputContainer}
           onChangeText={handleChangeTodoName}
           value={todoValue.name}
+          autoFocus
         />
         <View style={styles.colorPaletteContainer}>
           <TodoColorPalette todoValue={todoValue} onChangeTodoValue={onChangeTodoValue} />

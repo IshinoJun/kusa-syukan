@@ -10,6 +10,7 @@ interface Props {
   todoValues: TodoValue[];
   dimensions: ScaledSize;
   onChangeTodoValues: (nextTodoValues: TodoValue[]) => void;
+  editTodoValue?: TodoValue;
 }
 
 const TodoTopTable = ({
