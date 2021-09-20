@@ -10,16 +10,14 @@ import { cloneDeep } from 'lodash';
 import TodoForm from '../components/common/form/TodoForm';
 
 const TodoAddScreen = (): JSX.Element => {
-  // 初期のぶち込む処理のため
-  const todoValueDefaultRef = useRef<TodoValue>({
+  const navigation = useNavigation<HomeScreenProp>();
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [todoValue, setTodoValue] = useState<TodoValue>({
     name: '',
     values: [],
     color: '#EB5757',
     uuid: getUniqueStr(),
   });
-  const navigation = useNavigation<HomeScreenProp>();
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [todoValue, setTodoValue] = useState<TodoValue>(todoValueDefaultRef.current);
   const todoValues = useRef<TodoValue[] | null>(null);
   const isFocused = useIsFocused();
   const storage = useStorage();
@@ -28,12 +26,11 @@ const TodoAddScreen = (): JSX.Element => {
     navigation.navigate('TodoTop');
   }, [navigation]);
 
-  const handlePressTodoDelete = () => {
+  const handlePressTodoSave = () => {
     void (async (): Promise<void> => {
       if (!todoValues.current) return;
       try {
-        const nextTodoValues = todoValues.current.filter((t) => t.uuid !== todoValue.uuid);
-        await storage?.save({ key: 'TODO', data: nextTodoValues });
+        await storage?.save({ key: 'TODO', data: todoValues.current });
         navigation.navigate('TodoTop');
       } catch (e) {
         return;
@@ -55,9 +52,9 @@ const TodoAddScreen = (): JSX.Element => {
       </Text>
     </View>,
     <View key={2} style={{ width: '20%', alignItems: 'flex-end' }}>
-      <TouchableOpacity onPress={handlePressTodoDelete}>
+      <TouchableOpacity onPress={handlePressTodoSave}>
         <View style={styles.footerButtonWrap}>
-          <Text>削除</Text>
+          <Text>保存</Text>
         </View>
       </TouchableOpacity>
     </View>,
@@ -74,9 +71,7 @@ const TodoAddScreen = (): JSX.Element => {
           key: 'TODO',
         })) ?? []) as TodoValue[];
 
-        nextTodoValues?.push(todoValueDefaultRef.current);
         todoValues.current = nextTodoValues;
-        await storage?.save({ key: 'TODO', data: todoValues.current });
       } catch (e) {
         return;
       }
@@ -99,7 +94,6 @@ const TodoAddScreen = (): JSX.Element => {
           nextTodoValues[nextTodoValueIndex] = todoValue;
         }
         todoValues.current = nextTodoValues;
-        await storage?.save({ key: 'TODO', data: todoValues.current });
       } catch (e) {
         return;
       }

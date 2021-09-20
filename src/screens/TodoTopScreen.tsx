@@ -153,15 +153,6 @@ const TodoHomeScreen = (): JSX.Element => {
     }
   }, [storage, isFocused]);
 
-  useEffect(() => {
-    if (todoValues) {
-      storage?.save({
-        key: 'TODO',
-        data: todoValues,
-      });
-    }
-  }, [storage, todoValues]);
-
   return (
     <>
       <Layout headerContents={headerContents} footerContents={footerContents}>

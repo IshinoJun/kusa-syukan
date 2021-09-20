@@ -7,6 +7,7 @@ import TodoValue from '../models/TodoValue';
 import { useStorage } from '../hooks/useStorage';
 import { cloneDeep } from 'lodash';
 import TodoForm from '../components/common/form/TodoForm';
+import { Icon } from 'react-native-elements';
 
 const TodoEditScreen = (): JSX.Element => {
   const navigation = useNavigation<HomeScreenProp>();
@@ -20,6 +21,18 @@ const TodoEditScreen = (): JSX.Element => {
   const handleClickBack = useCallback(() => {
     navigation.navigate('TodoTop');
   }, [navigation]);
+
+  const handlePressTodoSave = () => {
+    void (async (): Promise<void> => {
+      if (!todoValues.current) return;
+      try {
+        await storage?.save({ key: 'TODO', data: todoValues.current });
+        navigation.navigate('TodoTop');
+      } catch (e) {
+        return;
+      }
+    })();
+  };
 
   const handlePressTodoDelete = () => {
     void (async (): Promise<void> => {
@@ -48,9 +61,19 @@ const TodoEditScreen = (): JSX.Element => {
       </Text>
     </View>,
     <View key={2} style={{ width: '20%', alignItems: 'flex-end' }}>
+      <TouchableOpacity onPress={handlePressTodoSave}>
+        <View style={styles.footerButtonWrap}>
+          <Text>保存</Text>
+        </View>
+      </TouchableOpacity>
+    </View>,
+  ];
+
+  const footerContents = [
+    <View key={0} style={{ justifyContent: 'center', alignItems: 'center', width: '100%' }}>
       <TouchableOpacity onPress={handlePressTodoDelete}>
         <View style={styles.footerButtonWrap}>
-          <Text>削除</Text>
+          <Icon type="ant-design" name="delete" size={20} />
         </View>
       </TouchableOpacity>
     </View>,
@@ -98,10 +121,11 @@ const TodoEditScreen = (): JSX.Element => {
   }, [isFocused, storage, todoValue]);
 
   return (
-    <Layout headerContents={headerContents}>
+    <Layout headerContents={headerContents} footerContents={footerContents}>
       {todoValue ? (
         <ScrollView>
           <TodoForm
+            editable={true}
             currentDate={currentDate}
             onChangeCurrentDate={setCurrentDate}
             todoValue={todoValue}

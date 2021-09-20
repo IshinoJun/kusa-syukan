@@ -10,6 +10,7 @@ interface Props {
   onChangeTodoValue: (nextTodoValue: TodoValue) => void;
   currentDate: Date;
   onChangeCurrentDate: (nextCurrentDate: Date) => void;
+  editable?: boolean;
 }
 
 const TodoForm = ({
@@ -17,6 +18,7 @@ const TodoForm = ({
   onChangeTodoValue,
   currentDate,
   onChangeCurrentDate,
+  editable,
 }: Props): JSX.Element => {
   const handleChangeTodoName = useCallback(
     (name: string) => {
@@ -34,7 +36,7 @@ const TodoForm = ({
           inputContainerStyle={styles.inputContainer}
           onChangeText={handleChangeTodoName}
           value={todoValue.name}
-          autoFocus
+          autoFocus={!editable}
         />
         <View style={styles.colorPaletteContainer}>
           <TodoColorPalette todoValue={todoValue} onChangeTodoValue={onChangeTodoValue} />
