@@ -137,6 +137,14 @@ const TodoHomeScreen = (): JSX.Element => {
   }, [generateDays]);
 
   useEffect(() => {
+    if (todoValues) {
+      void (async (): Promise<void> => {
+        await storage?.save({ key: 'TODO', data: todoValues });
+      })();
+    }
+  }, [generateDays, storage, todoValues]);
+
+  useEffect(() => {
     if (isFocused) {
       void (async (): Promise<void> => {
         try {

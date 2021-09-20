@@ -125,7 +125,6 @@ const TodoEditScreen = (): JSX.Element => {
         nextTodoValues[nextTodoValueIndex] = todoValue;
 
         todoValues.current = nextTodoValues;
-        await storage?.save({ key: 'TODO', data: todoValues.current });
       } catch (e) {
         return;
       }
