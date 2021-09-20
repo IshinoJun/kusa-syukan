@@ -83,7 +83,7 @@ const TodoCalender = ({
     <Calendar
       current={format(currentDate, 'yyyy-MM-dd')}
       monthFormat={'yyyy年 M月'}
-      style={{ backgroundColor: '#F0F0F0' }}
+      style={{ backgroundColor: '#F0F0F0', borderBottomWidth: 1, borderColor: '#D1D3D4' }}
       onPressArrowLeft={handlePressArrowLeft}
       onPressArrowRight={handlePressArrowRight}
       renderArrow={renderArrow}
@@ -115,18 +115,21 @@ const TodoCalender = ({
         'stylesheet.calendar.main': {
           dayContainer: {
             borderColor: '#D1D3D4',
-            borderWidth: 1,
+            borderTopWidth: 1,
+            borderRightWidth: 1,
             flex: 1,
             padding: 0,
           },
           emptyDayContainer: {
             borderColor: '#D1D3D4',
-            borderWidth: 1,
+            borderTopWidth: 1,
+            borderRightWidth: 1,
             flex: 1,
             padding: 0,
           },
           week: {
-            marginTop: 0,
+            borderLeftWidth: 1,
+            borderColor: '#D1D3D4',
             marginBottom: 0,
             flexDirection: 'row',
             justifyContent: 'space-around',
