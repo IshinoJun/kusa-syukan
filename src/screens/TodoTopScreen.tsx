@@ -29,12 +29,7 @@ const TodoHomeScreen = (): JSX.Element => {
     navigation.navigate('TodoAdd');
   }, [navigation]);
 
-  const headerContents = [
-    <Text style={styles.headerTitle} key={0}>
-      草習慣
-    </Text>,
-    <AddButton key={1} onPress={handlePressAddButton} />,
-  ];
+  const headerContents = [<Text key={0} />, <AddButton key={1} onPress={handlePressAddButton} />];
 
   const getCurrentDayDone = () => {
     const done =

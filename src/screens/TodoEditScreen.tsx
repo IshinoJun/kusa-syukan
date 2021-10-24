@@ -67,11 +67,6 @@ const TodoEditScreen = (): JSX.Element => {
         </View>
       </TouchableOpacity>
     </View>,
-    <View style={{ width: '60%', alignItems: 'center' }} key={1}>
-      <Text style={styles.headerTitle} key={1}>
-        草習慣
-      </Text>
-    </View>,
     <View key={2} style={{ width: '20%', alignItems: 'flex-end' }}>
       <TouchableOpacity onPress={handlePressTodoSave} disabled={todoValue?.name === ''}>
         <View style={styles.footerButtonWrap}>
