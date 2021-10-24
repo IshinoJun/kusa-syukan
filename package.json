@@ -29,7 +29,7 @@
     "react-native-calendars": "1.1264.0",
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "^1.10.3",
-    "react-native-screens": "^3.6.0",
+    "react-native-screens": "3.4.0",
     "react-native-storage": "^1.0.1",
     "react-native-table-component": "^1.2.1",
     "react-native-web": "~0.13.12"
