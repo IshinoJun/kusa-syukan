@@ -48,7 +48,7 @@ const TodoAddScreen = (): JSX.Element => {
     </View>,
     <View style={{ width: '60%', alignItems: 'center' }} key={1}>
       <Text style={styles.headerTitle} key={1}>
-        Daily Todo
+        草習慣
       </Text>
     </View>,
     <View key={2} style={{ width: '20%', alignItems: 'flex-end' }}>

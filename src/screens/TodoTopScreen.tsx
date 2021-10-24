@@ -31,7 +31,7 @@ const TodoHomeScreen = (): JSX.Element => {
 
   const headerContents = [
     <Text style={styles.headerTitle} key={0}>
-      Daily Todo
+      草習慣
     </Text>,
     <AddButton key={1} onPress={handlePressAddButton} />,
   ];

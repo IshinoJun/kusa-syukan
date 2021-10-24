@@ -1,4 +1,4 @@
-# daily-todo-app
+# kusa-syukan
 
 ## 環境
 
