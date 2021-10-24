@@ -60,14 +60,14 @@ const TodoEditScreen = (): JSX.Element => {
   }, [handleTodoDelete]);
 
   const headerContents = [
-    <View key={0} style={{ width: '20%', alignItems: 'flex-start' }}>
+    <View key={0}>
       <TouchableOpacity onPress={handleClickBack}>
         <View style={styles.footerButtonWrap}>
           <Text>戻る</Text>
         </View>
       </TouchableOpacity>
     </View>,
-    <View key={2} style={{ width: '20%', alignItems: 'flex-end' }}>
+    <View key={1}>
       <TouchableOpacity onPress={handlePressTodoSave} disabled={todoValue?.name === ''}>
         <View style={styles.footerButtonWrap}>
           <Text style={{ color: todoValue?.name === '' ? 'grey' : undefined }}>保存</Text>
